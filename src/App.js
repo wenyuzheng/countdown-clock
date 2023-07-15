@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
-  const timer = 2;
+  const [timer, setTimer] = useState(2);
   const [minute, setMinute] = useState(Math.floor(timer / 60));
   const [second, setSecond] = useState(timer % 60);
   const [start, setStart] = useState(false);
@@ -42,8 +42,26 @@ function App() {
     return () => clearInterval(countdown);
   }, [start, minute, second]);
 
+  const incrementTimer = () => {
+    const newTimer = timer + 60;
+    setTimer(newTimer);
+    setMinute(Math.floor(newTimer / 60));
+    setSecond(newTimer % 60);
+  };
+
+  const decrementTimer = () => {
+    const newTimer = timer - 60;
+    setTimer(newTimer);
+    setMinute(Math.floor(newTimer / 60));
+    setSecond(newTimer % 60);
+  };
+
   return (
     <div className="App">
+      <div onClick={incrementTimer}>+</div>
+      <div>{timer}</div>
+      <div onClick={decrementTimer}>-</div>
+
       <button onClick={handleStartClick}>Start</button>
       <button onClick={handlePausClick}>Pause</button>
       <div>
