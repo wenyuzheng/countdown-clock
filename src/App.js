@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
-  const timer = 61;
+  const timer = 2;
   const [minute, setMinute] = useState(Math.floor(timer / 60));
   const [second, setSecond] = useState(timer % 60);
   const [start, setStart] = useState(false);
@@ -11,16 +11,23 @@ function App() {
     setStart(true);
   };
 
+  const handlePausClick = () => {
+    setStart(false);
+  };
+
   useEffect(() => {
+    const stopCountdown = () => {
+      clearInterval(countdown);
+      setStart(false);
+    };
+
     const countdown = setInterval(() => {
       if (start) {
         if (minute === 0 && second === 0) {
-          clearInterval(countdown);
-          setStart(false);
+          stopCountdown();
           return;
         }
         const newSec = second - 1;
-
         if (newSec < 0) {
           setSecond(59);
           setMinute(minute - 1);
@@ -28,8 +35,7 @@ function App() {
           setSecond(newSec);
         }
       } else {
-        clearInterval(countdown);
-        setStart(false);
+        stopCountdown();
       }
     }, 1000);
 
@@ -39,6 +45,7 @@ function App() {
   return (
     <div className="App">
       <button onClick={handleStartClick}>Start</button>
+      <button onClick={handlePausClick}>Pause</button>
       <div>
         {minute}:{second}
       </div>
