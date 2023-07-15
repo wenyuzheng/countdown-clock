@@ -2,17 +2,25 @@ import { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
-  const [timer, setTimer] = useState(2);
-  const [minute, setMinute] = useState(Math.floor(timer / 60));
-  const [second, setSecond] = useState(timer % 60);
+  const count = 2;
+  const [timer, setTimer] = useState(count);
+  const [minute, setMinute] = useState(Math.floor(count / 60));
+  const [second, setSecond] = useState(count % 60);
   const [start, setStart] = useState(false);
 
   const handleStartClick = () => {
     setStart(true);
   };
 
-  const handlePausClick = () => {
+  const handlePauseClick = () => {
     setStart(false);
+  };
+
+  const handleResetClick = () => {
+    setStart(false);
+    setTimer(count);
+    setMinute(Math.floor(count / 60));
+    setSecond(count % 60);
   };
 
   useEffect(() => {
@@ -43,6 +51,7 @@ function App() {
   }, [start, minute, second]);
 
   const incrementTimer = () => {
+    if (start) return;
     const newTimer = timer + 60;
     setTimer(newTimer);
     setMinute(Math.floor(newTimer / 60));
@@ -51,6 +60,8 @@ function App() {
 
   const decrementTimer = () => {
     const newTimer = timer - 60;
+    if (start || newTimer < 0) return;
+
     setTimer(newTimer);
     setMinute(Math.floor(newTimer / 60));
     setSecond(newTimer % 60);
@@ -63,7 +74,9 @@ function App() {
       <div onClick={decrementTimer}>-</div>
 
       <button onClick={handleStartClick}>Start</button>
-      <button onClick={handlePausClick}>Pause</button>
+      <button onClick={handlePauseClick}>Pause</button>
+      <button onClick={handleResetClick}>Reset</button>
+
       <div>
         {minute}:{second}
       </div>
